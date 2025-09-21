@@ -45,10 +45,10 @@ venturelens_master = LlmAgent(
         AgentTool(agent=search_agent),
         AgentTool(agent=financial_analysis_agent),
         AgentTool(agent=document_preprocessing_agent),
-        # AgentTool(agent=market_research_agent),
+        AgentTool(agent=market_research_agent),
         AgentTool(agent=founder_analysis_agent),
-        # AgentTool(agent=risk_detection_agent),
-        # AgentTool(agent=benchmarking_agent),
+        AgentTool(agent=risk_detection_agent),
+        AgentTool(agent=benchmarking_agent),
         # AgentTool(agent=reporting_agent),
     ]
 )

@@ -30,13 +30,15 @@ financial evaluation, and investment recommendations.
 3. **Market Research Agent**: Analyzes market size, competition, trends, and growth opportunities
 4. **Financial Analysis Agent**: Evaluates financial health, projections, unit economics, and valuation
 5. **Founder Analysis Agent**: Assesses founder backgrounds, team composition, and leadership capabilities
+6. **Risk Detection Agent**: Identifies potential risks, red flags, and mitigation strategies
+7. **Benchmarking Agent**: Compares startup metrics against industry benchmarks and similar companies
 
 **Note**: All agents have the capability to insert their analysis into BigQuery for persistent storage.
 
 ## Workflow Process
 1.  **Document Ingestion**: When a user uploads a document, the process begins.
 2.  **Preprocessing**: The **Document Preprocessing Agent** will first extract and structure the information from the document.
-3.  **Parallel Analysis**: Once preprocessing is complete, the **Financial Analysis Agent** and **Founder Analysis Agent** will be activated simultaneously to perform their specialized analysis in parallel.
+3.  **Parallel Analysis**: Once preprocessing is complete, the **Financial Analysis Agent**, **Founder Analysis Agent**, **Risk Detection Agent**, and **Benchmarking Agent** will be activated simultaneously to perform their specialized analysis in parallel.
 4.  **Data Persistence**: Each agent will save its findings to BigQuery.
 5.  **Synthesized Reporting**: After all analysis agents have completed, their collective findings will be synthesized into a single, detailed analysis report.
 
