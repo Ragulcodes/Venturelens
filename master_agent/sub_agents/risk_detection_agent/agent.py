@@ -24,6 +24,7 @@ from dataclasses import dataclass
 
 from google.adk import Agent
 from google.cloud import bigquery
+from google.oauth2 import service_account
 from pydantic import BaseModel, Field
 from google.adk.tools.google_search_tool import google_search
 
@@ -36,6 +37,7 @@ PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT', 'starlit-factor-472009-b0')
 BUCKET_NAME = os.getenv('BUCKET_NAME', 'pitch-deck-analysis-bucket')
 BIGQUERY_DATASET = os.getenv('BIGQUERY_DATASET', 'pitch_deck_analysis')
 BIGQUERY_TABLE = os.getenv('BIGQUERY_TABLE', 'risk_analysis_results')
+CREDENTIALS_PATH = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
 
 @dataclass
@@ -78,7 +80,10 @@ class RiskAnalysisEngine:
     """Enhanced Risk Analysis Engine with BigQuery integration"""
 
     def __init__(self):
-        self.client = bigquery.Client(project=PROJECT_ID)
+        credentials = None
+        if CREDENTIALS_PATH:
+            credentials = service_account.Credentials.from_service_account_file(CREDENTIALS_PATH)
+        self.client = bigquery.Client(project=PROJECT_ID, credentials=credentials)
         self.risk_categories = [
             "Market_Competition",
             "Technology_Disruption",
@@ -362,7 +367,7 @@ def query_risk_analysis_results(company_name: Optional[str] = None, limit: int =
         Historical risk analysis data
     """
     try:
-        client = bigquery.Client(project=PROJECT_ID)
+        client = risk_engine.client
 
         where_clause = f"WHERE company_name = '{company_name}'" if company_name else ""
 

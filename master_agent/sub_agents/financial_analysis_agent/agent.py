@@ -17,6 +17,7 @@
 from google.adk import Agent
 from . import prompt
 from google.cloud import bigquery
+from google.oauth2 import service_account
 import os
 from typing import Dict, List, Any
 import logging
@@ -32,6 +33,7 @@ PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT', 'starlit-factor-472009-b0')
 BUCKET_NAME = os.getenv('BUCKET_NAME', 'pitch-deck-analysis-bucket')
 BIGQUERY_DATASET = os.getenv('BIGQUERY_DATASET', 'pitch_deck_analysis')
 BIGQUERY_TABLE = os.getenv('BIGQUERY_TABLE', 'financial_analysis_agent')
+CREDENTIALS_PATH = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
 def insert_in_big_query(analysis: Dict[str, Any]):
     """
@@ -79,7 +81,10 @@ def insert_in_big_query(analysis: Dict[str, Any]):
 def save_to_bigquery(analysis: Dict[str, Any]) -> bool:
     """Save analysis results to BigQuery"""
     try:
-        client = bigquery.Client(project=PROJECT_ID)
+        credentials = None
+        if CREDENTIALS_PATH:
+            credentials = service_account.Credentials.from_service_account_file(CREDENTIALS_PATH)
+        client = bigquery.Client(project=PROJECT_ID, credentials=credentials)
         # Insert to BigQuery
         table_ref = client.dataset(BIGQUERY_DATASET).table(BIGQUERY_TABLE)
         table = client.get_table(table_ref)
@@ -145,5 +150,7 @@ financial_analysis_agent = Agent(
     instruction=prompt.FINANCIAL_ANALYSIS_PROMPT,
     output_key="financial_analysis_report",
     tools=[insert_in_big_query],
-    output_schema=FAOutput
+    output_schema=FAOutput,
+    disallow_transfer_to_parent=True,
+    disallow_transfer_to_peers=True
 )

@@ -16,15 +16,15 @@
 
 from google.adk.agents import LlmAgent
 from google.adk.tools.agent_tool import AgentTool
-from .sub_agents.financial_analysis_agent.agent import financial_analysis_agent
-from .sub_agents.search_agent import search_agent
+from .sub_agents.search_agent.agent import search_agent
 
 from . import prompt
-# from .sub_agents.document_preprocessing_agent.agent import document_preprocessing_agent
+from .sub_agents.document_preprocessing_agent.agent import document_preprocessing_agent
 # from .sub_agents.market_research_agent.agent import market_research_agent
-# from .sub_agents.founder_analysis_agent.agent import founder_analysis_agent
-# from .sub_agents.risk_detection_agent.agent import risk_detection_agent
-# from .sub_agents.benchmarking_agent.agent import benchmarking_agent
+from .sub_agents.founder_analysis_agent.agent import founder_analysis_agent
+from .sub_agents.risk_detection_agent.agent import risk_detection_agent
+from .sub_agents.benchmarking_agent.agent import benchmarking_agent
+from .sub_agents.financial_analysis_agent.agent import financial_analysis_agent
 # from .sub_agents.reporting_agent.agent import reporting_agent
 
 MODEL = "gemini-2.5-flash"
@@ -44,9 +44,9 @@ venturelens_master = LlmAgent(
     tools=[
         AgentTool(agent=search_agent),
         AgentTool(agent=financial_analysis_agent),
-        # AgentTool(agent=document_preprocessing_agent),
+        AgentTool(agent=document_preprocessing_agent),
         # AgentTool(agent=market_research_agent),
-        # AgentTool(agent=founder_analysis_agent),
+        AgentTool(agent=founder_analysis_agent),
         # AgentTool(agent=risk_detection_agent),
         # AgentTool(agent=benchmarking_agent),
         # AgentTool(agent=reporting_agent),

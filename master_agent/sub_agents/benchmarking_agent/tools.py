@@ -23,6 +23,7 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 
 from google.cloud import bigquery
+from google.oauth2 import service_account
 from google.adk.tools.google_search_tool import google_search
 
 # Configure logging
@@ -34,7 +35,7 @@ PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT', 'starlit-factor-472009-b0')
 BUCKET_NAME = os.getenv('BUCKET_NAME', 'pitch-deck-analysis-bucket')
 BIGQUERY_DATASET = os.getenv('BIGQUERY_DATASET', 'pitch_deck_analysis')
 BIGQUERY_TABLE = os.getenv('BIGQUERY_TABLE', 'benchmark_analysis_results')
-
+CREDENTIALS_PATH = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
 @dataclass
 class BenchmarkMetric:
@@ -52,7 +53,10 @@ class BenchmarkAnalysisEngine:
     """Enhanced Benchmark Analysis Engine with BigQuery integration"""
 
     def __init__(self):
-        self.client = bigquery.Client(project=PROJECT_ID)
+        credentials = None
+        if CREDENTIALS_PATH:
+            credentials = service_account.Credentials.from_service_account_file(CREDENTIALS_PATH)
+        self.client = bigquery.Client(project=PROJECT_ID, credentials=credentials)
         self.benchmark_categories = [
             "financial_benchmarks",
             "traction_benchmarks",
@@ -666,7 +670,7 @@ def query_benchmark_data(company_name: Optional[str] = None, limit: int = 10) ->
         Historical benchmark analysis data
     """
     try:
-        client = bigquery.Client(project=PROJECT_ID)
+        client = benchmark_engine.client
 
         where_clause = f"WHERE company_name = '{company_name}'" if company_name else ""
 

@@ -15,13 +15,20 @@
 """Deployment script for Financial Advisor"""
 
 import os
+import sys
+
+# Add the project root to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 
 import vertexai
 from absl import app, flags
 from dotenv import load_dotenv
-from financial_advisor.agent import root_agent
+from master_agent.agent import root_agent
 from vertexai import agent_engines
 from vertexai.preview.reasoning_engines import AdkApp
+
+load_dotenv()
 
 FLAGS = flags.FLAGS
 flags.DEFINE_string("project_id", None, "GCP project ID.")
@@ -36,7 +43,7 @@ flags.mark_bool_flags_as_mutual_exclusive(["create", "delete"])
 
 
 def create() -> None:
-    """Creates an agent engine for Financial Advisors."""
+    """Creates an agent engine for Venture Lens."""
     adk_app = AdkApp(agent=root_agent, enable_tracing=True)
 
     remote_agent = agent_engines.create(
@@ -75,7 +82,6 @@ def list_agents() -> None:
 
 def main(argv: list[str]) -> None:
     del argv  # unused
-    load_dotenv()
 
     project_id = (
         FLAGS.project_id
