@@ -1,4 +1,4 @@
-"""A simple agent that uses the google_search tool."""
+"""Use this agent , if you need to web search capabilities."""
 
 from google.adk.agents import Agent
 from google.adk.tools import google_search
